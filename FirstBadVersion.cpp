@@ -10,7 +10,10 @@ private:
         if (l >= r) {
             return r;
         }
-        int mid = l / 2 + r / 2;
+        /****************/
+        //  此处注意整数越界
+        int mid = l / 2 + r / 2;  
+        /*************/
         if (isBadVersion(mid)) {
 	    std::cout << l << ", " << mid << std::endl;
             return findBadVersion(l, mid);
