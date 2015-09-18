@@ -1,39 +1,44 @@
-#include <vector>
-#include <algorithm>
-
-using std::vector;
-using std::sort;
-
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
 class Solution {
 
 public:
     /**
-     * @param A an integer array
-     * @return a long integer
+     * @param l1: the first list
+     * @param l2: the second list
+     * @return: the sum list of l1 and l2 
      */
-    long long permutationIndex(vector<int>& A) {
-        if (A.size() == 0)
-            return 0;
-            
-        // Write your code here
-		vector<int> B = A;
-		sort(B.begin(), B.end());
-		
-		long long result = 0;
-		vector<long long> factorial(A.size() + 1);
-		factorial[0] = 1;
-		factorial[1] = 1;
-		for (int i = 2;i<A.size() + 1; ++i) {
-		    factorial[i] = factorial[i-1] * i;
+	ListNode *addLists(ListNode *l1, ListNode *l2) {		
+		int carry = 0;
+		ListNode* newList = l1 ? l1 : l2;
+		ListNode* currentNode = newList;
+		while (l1 && l2) {
+			int sum  = carry + l1->val + l2->val;
+			if (sum > 9) carry = 1;
+			else carry = 0;
+			currentNode->val = sum % 10;				
+			l1 = l1->next;
+			l2 = l2->next;
+		}		
+		if (l2)
+			currentNode->next = l2;
+		while (currentNode) {
+			int sum  = carry + currentNode->val;
+			if (sum > 9) carry = 1;
+			else carry = 0;
+			currentNode->val = sum % 10;			
+			currentNode = currentNode->next;
 		}
-		
-		for (int i=0; i < A.size(); ++i) {
-		    int index = find(B.begin(), B.end(), A[i]) - B.begin();
-		    result += index * factorial[A.size()-1 - i];
-		    B.erase(B.begin() + index);
+		if (carry) {
+			ListNode* node = new ListNode(carry);
+			currentNode->next = node;			
 		}
-		
-		
-		return result+1;
+		return newList;
     }
 };
